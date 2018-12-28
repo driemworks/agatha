@@ -6,7 +6,7 @@ MYNT is a tool to help you predict future close prices for any given stock ticke
 Absolutely not. But it might help you learn how to use keras.
 
 ## How it works
-Mynt uses an LSTM network to predict close prices for a user-specified number of days in the future. The training data is downloaded via [Alpha Vantage](https://www.alphavantage.co/) and requires that you request an API key. Currently
+Mynt uses an LSTM network to predict close prices for a user-specified number of days in the future. The training data is downloaded via [Alpha Vantage](https://www.alphavantage.co/).
 
 ## Usage
 Refer to [app.py](https://github.com/driemworks/mynt/blob/master/app.py), where you can set parameters that are used to train the network: tickers, epochs, batch size, look back, and number of days to predict, the alpha vantage api key.
