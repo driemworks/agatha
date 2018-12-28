@@ -1,6 +1,9 @@
 # MYNT
 ![alt-text](https://img.shields.io/hexpm/l/plug.svg)
+<pre>
+
 Mynt is a tool to help you predict future close prices for any given stock tickers.
+</pre>
 ![alt-text](https://github.com/driemworks/mynt/blob/master/resources/images/NTDOY_12-16-2018_lookback=101_epochs=100_batch_size=32.png?raw=true)
 
 ## Should I have faith in the predictions?
