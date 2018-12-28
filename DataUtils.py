@@ -4,13 +4,13 @@ from sklearn.model_selection import train_test_split
 
 
 def create_dataset(dataset, look_back=1):
-	dataX, dataY = [], []
+	data_x, data_y = [], []
 	for i in range(len(dataset)-look_back-1):
 		a = dataset[i:(i+look_back), 0]
-		dataX.append(a)
-		dataY.append(dataset[i + look_back, 0])
+		data_x.append(a)
+		data_y.append(dataset[i + look_back, 0])
 
-	return np.array(dataX), np.array(dataY)
+	return np.array(data_x), np.array(data_y)
 
 
 def prepareTrainingData(dataframe, column_name, scaler, look_back):
@@ -23,14 +23,14 @@ def prepareTrainingData(dataframe, column_name, scaler, look_back):
 	train_size = int(len(dataset) * 0.67)
 	test_size = len(dataset) - train_size
 	train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
-	trainX, trainY = create_dataset(train, look_back)
-	testX, testY = create_dataset(test, look_back)
-	print("train x shape " + str(trainX.shape))
-	print("train y shape " + str(trainY.shape))
+	train_x, train_y = create_dataset(train, look_back)
+	test_x, test_y = create_dataset(test, look_back)
+	print("train x shape " + str(train_x.shape))
+	print("train y shape " + str(train_y.shape))
 	# reshape input to be [samples, time steps, features]
-	trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-	testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-	return trainX, testX, trainY, testY, dataset
+	train_x = np.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
+	test_x = np.reshape(test_x, (test_x.shape[0], 1, test_x.shape[1]))
+	return train_x, test_x, train_y, test_y, dataset
 
 
 def plotData(dataset, look_back, trainPredict, testPredict, futurePredict, scaler, title):
@@ -68,7 +68,7 @@ def prepareData(dataframe, scaler, look_back):
 	dataset = scaler.fit_transform(dataset)
 	# return du.create_dataset(dataset, look_back)
 	x, y = create_dataset(dataset, look_back)
-	trainX, testX, trainY, testY = train_test_split(x, y, train_size=0.67, shuffle=False)
-	trainX = np.reshape(trainX, (trainX.shape[0], trainX.shape[1], 1))
-	testX = np.reshape(testX, (testX.shape[0], testX.shape[1], 1))
-	return trainX, trainY, testX, testY, dataset
+	train_x, test_x, train_y, test_y = train_test_split(x, y, train_size=0.67, shuffle=False)
+	train_x = np.reshape(train_x, (train_x.shape[0], train_x.shape[1], 1))
+	test_x = np.reshape(test_x, (test_x.shape[0], test_x.shape[1], 1))
+	return train_x, train_y, test_x, test_y, dataset
