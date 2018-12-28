@@ -3,7 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 num_days_to_predict = 5
 show_plot = True
-alpha_vantage_api_key = ' 1YB64755JWVBCSU3'
+alpha_vantage_api_key = 'YOURAPIKEY'
 look_back = 7
 
 scaler = MinMaxScaler(feature_range=(0, 1))
