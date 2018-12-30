@@ -1,8 +1,8 @@
+import mynt.AlphaVantageGateway as avg
+import mynt.DataUtils as du
 import numpy as np
 
-import DataUtils as du
 import NetworkUtils as nu
-import AlphaVantageGateway as avg
 
 
 class ModelData():
@@ -27,6 +27,19 @@ def getOrTrainModel(api_key, ticker, scaler, epochs=100, batch_size=32, look_bac
 					alphavantage_data_path='../resources/prices/alpha_vantage/{}.pkl',
 					model_path='../resources/models/stock-prediction/{}_epochs={}&batch_size={}_lookback={}_model.json',
 					weights_path='../resources/weights/stock-prediction/{}_epochs={}&batch_size={}_lookback={}_model.h5'):
+	'''
+	This function
+	:param api_key:
+	:param ticker:
+	:param scaler:
+	:param epochs:
+	:param batch_size:
+	:param look_back:
+	:param alphavantage_data_path:
+	:param model_path:
+	:param weights_path:
+	:return:
+	'''
 	cache_path, model_path_formatted, weights_path_formatted = formatFilePaths(ticker, epochs, batch_size, look_back, 
 																			   alphavantage_data_path, model_path,
 																			   weights_path)
