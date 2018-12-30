@@ -12,6 +12,9 @@ Probably not.
 ## How it works
 Mynt uses an LSTM network to predict close prices for a user-specified number of days in the future. The training data is downloaded via [Alpha Vantage](https://www.alphavantage.co/).
 
+## Requirements
+- python 3.5 or higher
+
 ## Installation
 Clone this repository. Inside the Mynt folder, create the mynt package using
 ``` python
