@@ -18,7 +18,7 @@ Mynt uses an LSTM network to predict close prices for a user-specified number of
 ## Installation
 Clone this repository. Inside the Mynt folder, create the mynt package using
 ``` python
-python setup.py distutils
+python setup.py sdist
 ```
 Then install using pip. If you are using windows
 ``` python
