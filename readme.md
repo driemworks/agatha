@@ -28,6 +28,8 @@ If you are using a unix based OS
 ``` python
 pip install ./dist/Mynt-1.0-dev.tar.gz
 ```
+If you use anaconda, you can load the conda environment using the environment.yml file in `resources/conda`
+and running ```conda env create -f environment.yml```
 
 ## Usage
 First get an API key from Alpha Vantage. 

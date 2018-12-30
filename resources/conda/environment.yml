@@ -1,0 +1,16 @@
+name: pretick
+channels:
+- willyd
+- conda-forge
+- defaults
+dependencies:
+- certifi=2018.8.24=py35_1001
+- pip=18.0=py35_1001
+- python=3.5.5=he025d50_2
+- setuptools=40.4.3=py35_0
+- vc=14=0
+- vs2015_runtime=14.0.25420=0
+- wheel=0.32.0=py35_1000
+- wincertstore=0.2=py35_1002
+prefix: C:\Anaconda2\envs\pretick
+
