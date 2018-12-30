@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-	name="Mynt",
+	name="agatha",
 	version="1.0-dev",
 	packages=['.'],
 	license='Apache',

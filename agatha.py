@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler(feature_range=(0, 1))
 
 class ModelData():
-	def __init__(self, ticker, model, train_x, test_x, train_y, test_y, dataset, look_back):
+	def __init__(self, ticker, model, train_x, test_x, train_y, test_y, dataset, look_back, column):
 		self.ticker = ticker
 		self.model = model
 		self.train_x = train_x
@@ -18,10 +18,11 @@ class ModelData():
 		self.test_y = test_y
 		self.dataset = dataset
 		self.look_back = look_back
+		self.column = column
 
 
-def getOrTrainModel(api_key, ticker, alphavantage_data_path, model_path, weights_path,
-					epochs=100, batch_size=32, look_back=31,):
+def getOrTrainModel(api_key, ticker, alphavantage_data_path, attribute, model_path, weights_path,
+					epochs=100, batch_size=32, look_back=31):
 	'''
 	Use the provided parameters to train a model (at the specified model_path), save the weights to the weights_path,
 	and cache the price data from alpha vantage in the alphavantage_data_path.
@@ -31,6 +32,7 @@ def getOrTrainModel(api_key, ticker, alphavantage_data_path, model_path, weights
 	:param api_key: The alphavantage api key
 	:param ticker: The stock ticker
 	:param alphavantage_data_path: The path to alphavantage data
+	:param attribute: The column to predict. This can be 'open', 'close', or 'volume'
 	:param model_path: The path to a model, or path to where a model should be saved
 	:param weights_path: The path to model weights, or path to where weights should be saved
 	:param epochs: The epochs used to train the model
@@ -39,11 +41,11 @@ def getOrTrainModel(api_key, ticker, alphavantage_data_path, model_path, weights
 	:return: The model
 	'''
 	dataframe = avg.get_alpha_vantage_data(api_key, ticker, alphavantage_data_path)
-	train_x, test_x, train_y, test_y, dataset = du.prepareTrainingData(dataframe, 'close', scaler, look_back)
+	train_x, test_x, train_y, test_y, dataset = du.prepareTrainingData(dataframe, attribute, scaler, look_back)
 	# create and fit the LSTM network
 	model = nu.getModel(train_x, train_y, test_x, test_y, model_path, weights_path,
 						epochs=epochs, batch_size=batch_size, look_back=look_back)
-	return ModelData(ticker, model, train_x, test_x, train_y, test_y, dataset, look_back)
+	return ModelData(ticker, model, train_x, test_x, train_y, test_y, dataset, look_back, attribute)
 
 
 def predictFuture(model_data, num_days_to_predict, output_type):
@@ -66,27 +68,33 @@ def predictFuture(model_data, num_days_to_predict, output_type):
 	# nu.scorePrediction(train_predict, test_predict, train_y, test_y)
 	if output_type == 'plot':
 		du.plotData(model_data.dataset, model_data.look_back, train_predict, test_predict,
-					np.asarray(future_predict), scaler, model_data.ticker)
+					np.asarray(future_predict), scaler, model_data.column + ' - ' + model_data.ticker)
 		return
 	elif output_type == 'json':
-		return toJson(future_predict)
+		return toJson(future_predict, model_data.ticker, model_data.column)
 	else:
 		return future_predict
 
 
-def toJson(future_predict):
+def toJson(future_predict, ticker, column):
 	'''
 	Convert the future_predict list to json
 	:param future_predict: The future predictions
 	:return: the json representation of the future predictions
 	'''
-	json_strings = []
+	json_strings = {}
+	json_strings['ticker'] = ticker
+	json_strings['column'] = column
+
+	datas = []
 	i = 1
 	for future in future_predict:
 		val = future[0]
 		data = {}
 		data['day'] = str(i)
 		data['price'] = str(val)
-		json_strings.append(data)
+		datas.append(data)
 		i += 1
+
+	json_strings['predictions'] = datas
 	return json.dumps(json_strings)

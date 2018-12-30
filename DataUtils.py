@@ -13,9 +13,9 @@ def create_dataset(dataset, look_back=1):
 	return np.array(data_x), np.array(data_y)
 
 
-def prepareTrainingData(dataframe, column_name, scaler, look_back):
+def prepareTrainingData(dataframe, attribute, scaler, look_back):
 	# get the specified column and convert to float64
-	dataset = dataframe.loc[:, [column_name]]
+	dataset = dataframe.loc[:, [attribute]]
 	dataset = dataset.astype('float64')
 	# normalize the dataset
 	dataset = scaler.fit_transform(dataset)
