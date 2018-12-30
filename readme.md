@@ -35,9 +35,12 @@ and running ```conda env create -f environment.yml```
 First get an API key from Alpha Vantage. 
 To train a model for a  particular ticker, use
 ``` python
-model = getOrTrainModel(alpha_vantage_api_key, ticker, alphavantage_data,
+model = getOrTrainModel(alpha_vantage_api_key, ticker, attribute, alphavantage_data,
 						model_data, weights_data, epochs=epochs, look_back=look_back)
 ```
+where 
+- ticker is the stock ticker
+- attribute is the stock attribute to predict (open, close, volume),
 - alphavantage data is downloaded as a csv and then pickled (saved as .pkl)
 - the model_data is saved as json
 - the weights file is saved as .h5
@@ -46,20 +49,29 @@ Predictions for future close prices for a stock can have output type as `json` o
 ``` python
 prediction_output = predictFuture(model, num_days_to_predict, ouptut_type)
 ```
-Ex JSON output:
+
+Example:
+
+```python
+model = getOrTrainModel('adsfadsfasdf', 'GE', 'GE.pkl', 'open', 'model.json', 'weights.h5')
+prediction_output = predictFuture(model, 2, 'json')
 ```
-[
-   {
-      "price":"8.105009",
-      "day":"1"
-   },
-   {
-      "price":"7.9884334",
-      "day":"2"
-   },
-   ...
-   }
-]
+
+then `predition_output` is the following JSON:
+```
+{
+   "ticker":"GE",
+   "column":"open",
+   "predictions":[
+      {
+         "day":"1",
+         "price":"8.009521"
+      },
+      {
+         "day":"2",
+         "price":"8.117293"
+      }
+}
 ```
 Refer to [app.py](https://github.com/driemworks/mynt/blob/master/examples/app.py), for a working example.
 
