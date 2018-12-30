@@ -12,6 +12,20 @@ Probably not.
 ## How it works
 Mynt uses an LSTM network to predict close prices for a user-specified number of days in the future. The training data is downloaded via [Alpha Vantage](https://www.alphavantage.co/).
 
+## Installation
+Clone this repository. Inside the Mynt folder, create the mynt package using
+``` python
+python setup.py distutils
+```
+Then install using pip. If you are using windows
+``` python
+pip install ./dist/Mynt-1.0-dev.zip
+```
+If you are using a unix based OS
+``` python
+pip install ./dist/Mynt-1.0-dev.tar.gz
+```
+
 ## Usage
 First get an API key from Alpha Vantage. 
 To train a model for a  particular ticker, use
