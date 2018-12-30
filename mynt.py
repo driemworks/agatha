@@ -1,12 +1,15 @@
-import mynt.AlphaVantageGateway as avg
-import mynt.DataUtils as du
+import AlphaVantageGateway as avg
+import DataUtils as du
 import numpy as np
-
+import json
 import NetworkUtils as nu
+from sklearn.preprocessing import MinMaxScaler
 
+# use this to normalize all values between 0 and 1 (to train the model)
+scaler = MinMaxScaler(feature_range=(0, 1))
 
 class ModelData():
-	def __init__(self, ticker, model, train_x, test_x, train_y, test_y, dataset):
+	def __init__(self, ticker, model, train_x, test_x, train_y, test_y, dataset, look_back):
 		self.ticker = ticker
 		self.model = model
 		self.train_x = train_x
@@ -14,44 +17,43 @@ class ModelData():
 		self.train_y = train_y
 		self.test_y = test_y
 		self.dataset = dataset
+		self.look_back = look_back
 
 
-def formatFilePaths(ticker, epochs, batch_size, look_back, alpha_vantage_data_path, model_path, weights_path):
-	cache_path_formatted = alpha_vantage_data_path.format(ticker)
-	model_path_formatted = model_path.format(ticker, epochs, batch_size, look_back)
-	weights_path_formatted = weights_path.format(ticker, epochs, batch_size, look_back)
-	return cache_path_formatted, model_path_formatted, weights_path_formatted
-
-
-def getOrTrainModel(api_key, ticker, scaler, epochs=100, batch_size=32, look_back=31,
-					alphavantage_data_path='../resources/prices/alpha_vantage/{}.pkl',
-					model_path='../resources/models/stock-prediction/{}_epochs={}&batch_size={}_lookback={}_model.json',
-					weights_path='../resources/weights/stock-prediction/{}_epochs={}&batch_size={}_lookback={}_model.h5'):
+def getOrTrainModel(api_key, ticker, alphavantage_data_path, model_path, weights_path,
+					epochs=100, batch_size=32, look_back=31,):
 	'''
-	This function
-	:param api_key:
-	:param ticker:
-	:param scaler:
-	:param epochs:
-	:param batch_size:
-	:param look_back:
-	:param alphavantage_data_path:
-	:param model_path:
-	:param weights_path:
-	:return:
+	Use the provided parameters to train a model (at the specified model_path), save the weights to the weights_path,
+	and cache the price data from alpha vantage in the alphavantage_data_path.
+
+	If cached data is found, then use the cached price data and weights to compile the trained model
+
+	:param api_key: The alphavantage api key
+	:param ticker: The stock ticker
+	:param alphavantage_data_path: The path to alphavantage data
+	:param model_path: The path to a model, or path to where a model should be saved
+	:param weights_path: The path to model weights, or path to where weights should be saved
+	:param epochs: The epochs used to train the model
+	:param batch_size: The batch_size used to train the model
+	:param look_back: The look_back value used to train the model
+	:return: The model
 	'''
-	cache_path, model_path_formatted, weights_path_formatted = formatFilePaths(ticker, epochs, batch_size, look_back, 
-																			   alphavantage_data_path, model_path,
-																			   weights_path)
-	dataframe = avg.get_alpha_vantage_data(api_key, ticker, cache_path)
+	dataframe = avg.get_alpha_vantage_data(api_key, ticker, alphavantage_data_path)
 	train_x, test_x, train_y, test_y, dataset = du.prepareTrainingData(dataframe, 'close', scaler, look_back)
 	# create and fit the LSTM network
-	model = nu.getModel(train_x, train_y, test_x, test_y, model_path_formatted, weights_path_formatted,
+	model = nu.getModel(train_x, train_y, test_x, test_y, model_path, weights_path,
 						epochs=epochs, batch_size=batch_size, look_back=look_back)
-	return ModelData(ticker, model, train_x, test_x, train_y, test_y, dataset)
+	return ModelData(ticker, model, train_x, test_x, train_y, test_y, dataset, look_back)
 
 
-def predictFuture(model_data, num_days_to_predict, plotOutput, scaler, look_back):
+def predictFuture(model_data, num_days_to_predict, output_type):
+	'''
+	Predict the model output num_days_to_predict days in the future
+	:param model_data: The model_data holds the model, test data, training data, and look back value
+	:param num_days_to_predict: The number of days to predict in the future
+	:param output_type: The output type can be either 'plot' or 'json'
+	:return: JSON if output type is 'json', show plot if output type is 'plot'
+	'''
 	# make predictions
 	model = model_data.model
 	train_predict = model.predict(model_data.train_x)
@@ -62,8 +64,29 @@ def predictFuture(model_data, num_days_to_predict, plotOutput, scaler, look_back
 		nu.invert_predictions(train_predict, test_predict, model_data.train_y, model_data.test_y, scaler)
 
 	# nu.scorePrediction(train_predict, test_predict, train_y, test_y)
-	if plotOutput:
-		du.plotData(model_data.dataset, look_back, train_predict, test_predict,
+	if output_type == 'plot':
+		du.plotData(model_data.dataset, model_data.look_back, train_predict, test_predict,
 					np.asarray(future_predict), scaler, model_data.ticker)
+		return
+	elif output_type == 'json':
+		return toJson(future_predict)
+	else:
+		return future_predict
 
-	return future_predict
+
+def toJson(future_predict):
+	'''
+	Convert the future_predict list to json
+	:param future_predict: The future predictions
+	:return: the json representation of the future predictions
+	'''
+	json_strings = []
+	i = 1
+	for future in future_predict:
+		val = future[0]
+		data = {}
+		data['day'] = str(i)
+		data['price'] = str(val)
+		json_strings.append(data)
+		i += 1
+	return json.dumps(json_strings)

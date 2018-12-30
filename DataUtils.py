@@ -50,12 +50,16 @@ def plotData(dataset, look_back, trainPredict, testPredict, futurePredict, scale
 	futurePredictPlot[:, :] = np.nan
 	futurePredictPlot[dataset_length-1:dataset_length + num_days_predicted-1, :] = futurePredict
 	# plot baseline and predictions
-	plt.plot(scaler.inverse_transform(dataset))
-	plt.plot(trainPredictPlot)
-	plt.plot(testPredictPlot)
-	plt.plot(futurePredictPlot)
+	actual = plt.plot(scaler.inverse_transform(dataset), label='actual')
+	train = plt.plot(trainPredictPlot, label='train')
+	test = plt.plot(testPredictPlot, label='test')
+	pred = plt.plot(futurePredictPlot, label='prediction')
 	plt.grid(color='black', linestyle='-', linewidth=0.5)
+	plt.legend(loc=1, fontsize='small')
+	plt.xlabel('Day')
+	plt.ylabel('Price (USD)')
 	plt.title(title)
+	# return plt
 	plt.show()
 
 

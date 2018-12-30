@@ -9,6 +9,13 @@ alpha_vantage_url = 'https://www.alphavantage.co/query?' \
 
 
 def get_alpha_vantage_data(api_key, ticker, cache_path):
+    '''
+    Download data from alphavantage, or retrieve from the cache_path if it exists
+    :param api_key: The alphavantage api key
+    :param ticker: The stock ticker
+    :param cache_path: The cache path
+    :return: The alphavantage data
+    '''
     if os.path.exists(cache_path):
         f = open(cache_path, 'rb')
         data = pickle.load(f)

@@ -1,9 +1,6 @@
 # MYNT
 ![alt-text](https://img.shields.io/hexpm/l/plug.svg)  
-
 Mynt is a tool to help you predict future close prices for any given stock tickers.
-
-![alt-text](https://github.com/driemworks/mynt/blob/master/resources/images/NTDOY_12-16-2018_lookback=101_epochs=100_batch_size=32.png?raw=true)
 
 ## Should I have faith in the predictions?
 Absolutely not. 
@@ -13,15 +10,33 @@ Mynt uses an LSTM network to predict close prices for a user-specified number of
 
 ## Usage
 First get an API key from Alpha Vantage. 
-To train a model for a  particular ticker
+To train a model for a  particular ticker, use
 ``` python
-model = getOrTrainModel(alpha_vantage_api_key, 'GE', scaler, epochs=100, look_back=look_back)
+model = getOrTrainModel(alpha_vantage_api_key, ticker, alphavantage_data,
+						model_data, weights_data, epochs=epochs, look_back=look_back)
 ```
-To predict future close prices for a stock
-```
-prediction = predictFuture(model, num_days_to_predict, show_plot, scaler, look_back=look_back)
-```
+- alphavantage data is downloaded as a csv and then pickled (saved as .pkl)
+- the model_data is saved as json
+- the weights file is saved as .h5
 
+Predictions for future close prices for a stock can have output type as `json` or `plot` (will show pyplot)  
+```python
+prediction_output = predictFuture(model, num_days_to_predict, ouptut_type)
+```
+Ex JSON output:
+```
+[
+   {
+      "price":"8.105009",
+      "day":"1"
+   },
+   {
+      "price":"7.9884334",
+      "day":"2"
+   },
+   ...
+   },
+```
 Refer to [app.py](https://github.com/driemworks/mynt/blob/master/examples/app.py), for a working example.
 
 ## Future Enhancements
