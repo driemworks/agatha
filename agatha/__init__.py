@@ -1,0 +1,1 @@
+from agatha.agatha import getOrTrainModel, predictFuture

@@ -1,9 +1,11 @@
-import AlphaVantageGateway as avg
-import DataUtils as du
-import numpy as np
 import json
-import NetworkUtils as nu
+
+import agatha.AlphaVantageGateway as avg
+import agatha.DataUtils as du
+import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+
+from agatha import NetworkUtils as nu
 
 # use this to normalize all values between 0 and 1 (to train the model)
 scaler = MinMaxScaler(feature_range=(0, 1))

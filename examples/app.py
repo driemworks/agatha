@@ -7,7 +7,7 @@ ouptut_type = 'json'
 # your alphavantage api key
 alpha_vantage_api_key = '1YB64755JWVBCSU3'
 # the data attribute you want to predict (open, close, or volume)
-attribute = 'open'
+attribute = 'close'
 # the number of days in the future you want to predict (generally should be less than look_back)
 num_days_to_predict = 20
 # number of epochs to train the model
@@ -32,8 +32,10 @@ model_data = 'resources/models/epochs={}&batch_size={}_lookback={}_model.json'.f
 weights_data = 'resources/weights/{}_epochs={}&batch_size={}_lookback={}_weights.h5'.format(
 	ticker, epochs, batch_size, look_back)
 
-model = getOrTrainModel(alpha_vantage_api_key, ticker, alphavantage_data, attribute,
-						model_data, weights_data, epochs=epochs, look_back=look_back)
-prediction_output = predictFuture(model, num_days_to_predict, ouptut_type)
 
-print(prediction_output)
+if __name__ == "__main__":
+	model = getOrTrainModel(alpha_vantage_api_key, ticker, alphavantage_data, attribute,
+							model_data, weights_data, epochs=epochs, look_back=look_back)
+	prediction_output = predictFuture(model, num_days_to_predict, ouptut_type)
+
+	print(prediction_output)

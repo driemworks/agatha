@@ -2,9 +2,44 @@ from distutils.core import setup
 
 setup(
 	name="agatha",
-	version="1.0-dev",
-	packages=['.'],
+	version="1.0.0-dev",
+	packages=['.', 'agatha'],
 	license='Apache',
+	description='Stock price prediction with keras ',
 	author="Tony Riemer",
-	author_email="tonyrriemer@gmail.com"
+	author_email="tonyrriemer@gmail.com",
+	install_requires=[
+		'absl-py>=0.6.1'
+		'astor>=0.7.1',
+		'certifi>=2018.8.24',
+		'chardet>=3.0.4',
+		'cycler>=0.10.0',
+		'gast>=0.2.0',
+		'grpcio>=1.17.1',
+		'h5py>=2.9.0',
+		'idna>=2.8',
+		'Keras>=2.2.4',
+		'Keras-Applications>=1.0.6',
+		'Keras-Preprocessing>=1.0.5',
+		'kiwisolver>=1.0.1',
+		'Markdown>=3.0.1',
+		'matplotlib>=3.0.2',
+		'numpy>=1.15.4',
+		'pandas>=0.23.4',
+		'protobuf>=3.6.1',
+		'pyparsing>=2.3.0',
+		'python-dateutil>=2.7.5',
+		'pytz>=2018.7',
+		'PyYAML>=3.13',
+		'requests>=2.21.0',
+		'scikit-learn>=0.20.2',
+		'scipy>=1.2.0',
+		'six>=1.12.0',
+		'tensorboard>=1.12.1',
+		'tensorflow>=1.12.0',
+		'termcolor>=1.1.0',
+		'urllib3>=1.24.1',
+		'Werkzeug>=0.14.1',
+		'wincertstore>=0.2'
+	]
 )

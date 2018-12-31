@@ -16,23 +16,37 @@ Agatha uses an LSTM network to predict close prices for a user-specified number 
 - python 3.5 or higher
 
 ## Installation
+There are two ways to install agatha.
+
+### Install using pip
+This is the easiest way to install agatha. Simply run:
+
+```bash
+pip install agatha
+```
+
+Note: keep in mind that this requires python 3.5 or higher.
+
+### Build form sources
 Clone this repository. Inside the Agatha folder, create the agatha package using
 ``` python
 python setup.py sdist
 ```
-Then install using pip. If you are using windows
+Then install using pip. 
 ``` python
-pip install ./dist/agatha-1.0-dev.zip
+pip install dist/*
 ```
-If you are using a unix based OS
-``` python
-pip install ./dist/agatha-1.0-dev.tar.gz
-```
+
 If you use anaconda, you can load the conda environment using the environment.yml file in `resources/conda`
 and running ```conda env create -f environment.yml```
 
 ## Usage
-First get an API key from Alpha Vantage. 
+First, import agatha's functions 
+```python
+from agatha import getOrTrainModel, predictFuture
+```
+
+Then get an API key from Alpha Vantage. 
 To train a model for a  particular ticker, use
 ``` python
 model = getOrTrainModel(alpha_vantage_api_key, ticker, attribute, alphavantage_data,
@@ -45,7 +59,7 @@ where
 - the model_data is saved as json
 - the weights file is saved as .h5
 
-Predictions for future close prices for a stock can have output type as `json` or `plot` (will show pyplot)  
+Predictions for future close prices for a stock can have output type as `json` or `plot` (pyplot, as shown in graphs above) 
 ``` python
 prediction_output = predictFuture(model, num_days_to_predict, ouptut_type)
 ```
