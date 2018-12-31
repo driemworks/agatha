@@ -1,5 +1,7 @@
 # Agatha
-![alt-text](https://img.shields.io/hexpm/l/plug.svg)  
+![license](https://img.shields.io/hexpm/l/plug.svg) [![PyPI version](https://badge.fury.io/py/agatha.svg)](https://badge.fury.io/py/agatha)
+
+
 Agatha is a tool to help you predict future prices (open, close) or daily volume for any given stock ticker.
 
 <p align="center">
