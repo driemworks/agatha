@@ -1,6 +1,6 @@
 # Agatha
 ![alt-text](https://img.shields.io/hexpm/l/plug.svg)  
-Agatha is a tool to help you predict future close prices for any given stock tickers.
+Agatha is a tool to help you predict future prices (open, close) or daily volume for any given stock ticker.
 
 <p align="center">
 <img src="https://github.com/driemworks/agatha/blob/master/resources/images/full.PNG?raw=true" alt="full" width="400" height="400">|<img src="https://github.com/driemworks/agatha/blob/master/resources/images/prediction.PNG?raw=true" alt="full" width="400" height="400">
