@@ -73,7 +73,7 @@ model = getOrTrainModel('adsfadsfasdf', 'GE', 'GE.pkl', 'open', 'model.json', 'w
 prediction_output = predictFuture(model, 2, 'json')
 ```
 
-then `predition_output` is the following JSON:
+Example output JSON from `predictFuture`:
 ```
 {
    "ticker":"GE",
