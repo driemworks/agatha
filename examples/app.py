@@ -5,7 +5,7 @@ ticker = 'GE'
 # the output type (can be json or plot)
 ouptut_type = 'json'
 # your alphavantage api key
-alpha_vantage_api_key = '1YB64755JWVBCSU3'
+alpha_vantage_api_key = 'YOUR-API-KEY-FROM-ALPHAVANTAGE'
 # the data attribute you want to predict (open, close, or volume)
 attribute = 'close'
 # the number of days in the future you want to predict (generally should be less than look_back)
