@@ -48,7 +48,7 @@ def plotData(dataset, look_back, trainPredict, testPredict, futurePredict, scale
 	dataset_length = len(dataset)
 	futurePredictPlot = np.empty((num_days_predicted + dataset_length, 1))
 	futurePredictPlot[:, :] = np.nan
-	futurePredictPlot[dataset_length-1:dataset_length + num_days_predicted-1, :] = futurePredict
+	futurePredictPlot[dataset_length-3:dataset_length + num_days_predicted-3, :] = futurePredict
 	# plot baseline and predictions
 	actual = plt.plot(scaler.inverse_transform(dataset), label='actual')
 	train = plt.plot(trainPredictPlot, label='train')

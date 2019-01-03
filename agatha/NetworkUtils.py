@@ -29,13 +29,17 @@ def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100,
 	:param look_back: The look back value (default 1, should always be the same as the  dimenstion of your trainX data)
 	:return:  The model
 	'''
+
+	model = None
+	# if model path exists, load it
 	if os.path.exists(model_path):
 		json_file = open(model_path, 'r')
 		loaded_model_json = json_file.read()
 		json_file.close()
 		model = model_from_json(loaded_model_json)
-		model.load_weights(weights_path)
 		print("Loaded model from {}".format(model_path))
+		if os.path.exists(weights_path):
+			model.load_weights(weights_path)
 	else:
 		model = Sequential()
 		model.add(LSTM(64, input_shape=(1, look_back), return_sequences=True, implementation=1))
@@ -43,21 +47,27 @@ def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100,
 		# model.add(LSTM(8, input_shape=(1, look_back), return_sequences=True, implementation=1))
 		model.add(LSTM(8, input_shape=(1, look_back), return_sequences=False, implementation=1, activation='tanh'))
 		model.add(Dense(1, kernel_initializer='normal', activation='tanh'))
-		model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
-		print(trainX.shape)
-		model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, validation_data=(testX, testY), verbose=2)
-
 		if not os.path.exists(model_path):
 			# serialize model to JSON
 			model_json = model.to_json()
 			with open(model_path, "w") as json_file:
 				json_file.write(model_json)
-			# serialize weights to HDF5
-			model.save_weights(weights_path)
-			print("Saved model to {}".format(model_path))
+				print("Saved model to {}".format(model_path))
 
-		print("Collecting garbage.")
-		gc.collect()
+	# must compile the model before training it
+	model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+	# if the weights path exists, use the weights!
+	if os.path.exists(weights_path):
+		model.load_weights(weights_path)
+	else:
+		# if no weights exist, train the model
+		model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, validation_data=(testX, testY), verbose=2)
+		# serialize weights to HDF5
+		model.save_weights(weights_path)
+		print("Saved weights to {}".format(weights_path))
+
+	print("Collecting garbage.")
+	gc.collect()
 
 	return model
 
