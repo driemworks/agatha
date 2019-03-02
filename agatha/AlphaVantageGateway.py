@@ -26,8 +26,9 @@ def get_alpha_vantage_data(api_key, ticker, cache_path):
         data = pd.read_csv(io.StringIO(content.decode('utf-8')))
         # reverse order so newest is at end of list
         data = data[::-1]
-        with open(cache_path, 'wb') as f:
-            data.to_pickle(f)
-            print('Cached {} data at {}'.format(ticker, cache_path))
+        if not cache_path == None:
+            with open(cache_path, 'wb') as f:
+                data.to_pickle(f)
+                print('Cached {} data at {}'.format(ticker, cache_path))
 
     return data

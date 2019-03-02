@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
 	name="agatha",
-	version="1.0.0-dev",
+	version="1.0.2-dev",
 	packages=['.', 'agatha'],
 	license='Apache',
 	description='Stock price prediction with keras ',

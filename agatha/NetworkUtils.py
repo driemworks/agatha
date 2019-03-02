@@ -6,12 +6,8 @@ import numpy as np
 from keras.layers import Dense, LSTM, Activation, Dropout, ActivityRegularization, TimeDistributed, AveragePooling1D, Flatten
 from keras.models import Sequential, model_from_json
 
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 # fix random seed for reproducibility purposes
-np.random.seed(7)
+# np.random.seed(7)
 
 def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100, batch_size=16, look_back=1):
 	'''
@@ -29,8 +25,6 @@ def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100,
 	:param look_back: The look back value (default 1, should always be the same as the  dimenstion of your trainX data)
 	:return:  The model
 	'''
-
-	model = None
 	# if model path exists, load it
 	if os.path.exists(model_path):
 		json_file = open(model_path, 'r')
@@ -42,9 +36,9 @@ def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100,
 			model.load_weights(weights_path)
 	else:
 		model = Sequential()
-		model.add(LSTM(64, input_shape=(1, look_back), return_sequences=True, implementation=1))
-		# model.add(LSTM(16, input_shape=(1, look_back), return_sequences=True, implementation=1))
-		# model.add(LSTM(8, input_shape=(1, look_back), return_sequences=True, implementation=1))
+		model.add(LSTM(128, activation='relu', input_shape=(1, look_back), return_sequences=True, implementation=1))
+		model.add(LSTM(32, input_shape=(1, look_back), return_sequences=True, implementation=1))
+		# model.add(LSTM(8, input_shape=(1, look_back), return_sequences=True, implementation=1, activation='tanh'))
 		model.add(LSTM(8, input_shape=(1, look_back), return_sequences=False, implementation=1, activation='tanh'))
 		model.add(Dense(1, kernel_initializer='normal', activation='tanh'))
 		if not os.path.exists(model_path):
@@ -55,13 +49,13 @@ def getModel(trainX, trainY, testX, testY, model_path, weights_path, epochs=100,
 				print("Saved model to {}".format(model_path))
 
 	# must compile the model before training it
-	model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+	model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mse'])
 	# if the weights path exists, use the weights!
 	if os.path.exists(weights_path):
 		model.load_weights(weights_path)
 	else:
 		# if no weights exist, train the model
-		model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, validation_data=(testX, testY), verbose=2)
+		model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, validation_data=(testX, testY), verbose=3)
 		# serialize weights to HDF5
 		model.save_weights(weights_path)
 		print("Saved weights to {}".format(weights_path))

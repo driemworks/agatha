@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -9,7 +10,6 @@ def create_dataset(dataset, look_back=1):
 		a = dataset[i:(i+look_back), 0]
 		data_x.append(a)
 		data_y.append(dataset[i + look_back, 0])
-
 	return np.array(data_x), np.array(data_y)
 
 
@@ -33,34 +33,45 @@ def prepareTrainingData(dataframe, attribute, scaler, look_back):
 	return train_x, test_x, train_y, test_y, dataset
 
 
-def plotData(dataset, look_back, trainPredict, testPredict, futurePredict, scaler, title):
-	# shift train predictions for plotting
-	trainPredictPlot = np.empty_like(dataset)
-	trainPredictPlot[:, :] = np.nan
-	trainPredictPlot[look_back:len(trainPredict) + look_back, :] = trainPredict
-	# shift test predictions for plotting
-	testPredictPlot = np.empty_like(dataset)
-	testPredictPlot[:, :] = np.nan
-	testPredictPlot[len(trainPredict) + (look_back * 2):len(dataset) - 2, :] = testPredict
-	_plotshape = testPredictPlot.shape
-	# shift future prediction for plotting
-	num_days_predicted = len(futurePredict)
-	dataset_length = len(dataset)
-	futurePredictPlot = np.empty((num_days_predicted + dataset_length, 1))
-	futurePredictPlot[:, :] = np.nan
-	futurePredictPlot[dataset_length-3:dataset_length + num_days_predicted-3, :] = futurePredict
-	# plot baseline and predictions
-	actual = plt.plot(scaler.inverse_transform(dataset), label='actual')
-	train = plt.plot(trainPredictPlot, label='train')
-	test = plt.plot(testPredictPlot, label='test')
-	pred = plt.plot(futurePredictPlot, label='prediction')
+def plotData(dataset, look_back, trainPredict, testPredict, futurePredict, scaler, title, save, save_dir, show):
+	ax = plt.subplot()
+
+	testTerminalIndex = len(testPredict) + len(trainPredict) + 2*look_back
+
+	if trainPredict is not None:
+		# shift train predictions for plotting
+		trainPredictPlot = np.empty_like(dataset)
+		trainPredictPlot[:, :] = np.nan
+		trainPredictPlot[look_back-1:len(trainPredict) + look_back - 1, :] = trainPredict
+		ax.plot(trainPredictPlot, label='train')
+
+	if testPredict is not None:
+		# shift test predictions for plotting
+		testPredictPlot = np.empty_like(dataset)
+		testPredictPlot[:, :] = np.nan
+		testPredictPlot[len(trainPredict) + (look_back * 2):testTerminalIndex :] = testPredict
+		ax.plot(testPredictPlot, label='test')
+
+	if futurePredict is not None:
+		# shift future prediction for plotting
+		num_days_predicted = len(futurePredict)
+		dataset_length = len(dataset)
+		futurePredictPlot = np.empty((num_days_predicted + dataset_length, 1))
+		futurePredictPlot[:, :] = np.nan
+		futurePredictPlot[testTerminalIndex + 1:testTerminalIndex + 1 + num_days_predicted, :] = futurePredict
+		ax.plot(futurePredictPlot, label='prediction')
+	# plot baseline
+		ax.plot(scaler.inverse_transform(dataset), label='actual')
 	plt.grid(color='black', linestyle='-', linewidth=0.5)
 	plt.legend(loc=1, fontsize='small')
 	plt.xlabel('Day')
 	plt.ylabel('Price (USD)')
 	plt.title(title)
-	# return plt
-	plt.show()
+	if save:
+		file = open(save_dir + title + '.pkl', 'wb')
+		pickle.dump(ax, file)
+	if show:
+		plt.show()
 
 
 def prepareData(dataframe, scaler, look_back):
