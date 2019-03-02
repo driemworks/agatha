@@ -13,7 +13,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # you can get data for nearly any symbol from alphavantage, though it doesn't have everything
 tickers = ['F', 'AAPL', 'GE']
 # your alphavantage api key
-alpha_vantage_api_key = 'YOUR-API-KEY-FROM-ALPHAVANTAGE'
+alpha_vantage_api_key = '1YB64755JWVBCS3'
 attribute = 'close'
 # the number of days in the future you want to predict (generally should be less than look_back)
 num_days_to_predict = 10
@@ -72,7 +72,6 @@ def predictClosePrices():
 			print(str(e))
 			continue
 
-<<<<<<< HEAD
 		print('END - ' + ticker)
 	if candidates is not None:
 		print(candidates)
@@ -83,7 +82,4 @@ def predictClosePrices():
 
 if __name__ == "__main__":
 	predictClosePrices()
-	# readCandidatePlots()
-=======
-	print(prediction_output)
->>>>>>> 3c5d879b8ef024d36cbaee3cb37ffa552133af5a
+	readCandidatePlots()
