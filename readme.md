@@ -21,13 +21,12 @@ Agatha uses an LSTM network to predict close prices for a user-specified number 
 There are two ways to install agatha.
 
 ### Install using pip
-This is the easiest way to install agatha. Simply run:
-
+The easiest way to install agatha is via pip:
 ```bash
 pip install agatha
 ```
-
 Note: keep in mind that this requires python 3.5 or higher.
+Another Note: If you want the latest version build from sources.
 
 ### Build form sources
 Clone this repository. Inside the Agatha folder, create the agatha package using
